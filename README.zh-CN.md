@@ -116,7 +116,7 @@ ln -s ~/antigravity-skills/skills/* .agent/skills/
 
 
 
-## 🚀 已集成的 Skills (共 50 个)
+## 🚀 已集成的 Skills (共 55 个)
 
 ### 🎨 创意与设计 (Creative & Design)
 这些技能专注于视觉表现、UI/UX 设计和艺术创作。
@@ -129,10 +129,15 @@ ln -s ~/antigravity-skills/skills/* .agent/skills/
 - **`@[theme-factory]`**: 为文档、幻灯片、HTML 等生成配套的主题风格
 - **`@[brand-guidelines]`**: 应用 Anthropic 官方品牌设计规范（颜色、排版等）
 - **`@[remotion]`**: Remotion 最佳实践 - 使用 React 创建视频。
+- **`@[web-design-guidelines]`**: 审查 UI 代码是否符合 Web 界面指南（可访问性、用户体验、设计审计）。
 - **`@[slack-gif-creator]`**: 制作专用于 Slack 的高质量 GIF 动图
 
 ### 🛠️ 开发与工程 (Development & Engineering)
 这些技能涵盖了编码、测试、调试和代码审查的全生命周期。
+- **`@[composition-patterns]`**: 用于构建可扩展、灵活组件库的 React 组合模式。
+- **`@[react-best-practices]`**: Vercel 官方的 React 和 Next.js 性能优化指南。
+- **`@[react-native-skills]`**: 用于构建高性能移动应用的 React Native 和 Expo 最佳实践。
+- **`@[supabase-postgres-best-practices]`**: 来自 Supabase 的 Postgres 性能优化和最佳实践。
 - **`@[test-driven-development]`**: 测试驱动开发（TDD），在编写实现代码前先编写测试
 - **`@[systematic-debugging]`**: 系统化调试，用于解决 Bug、测试失败或异常行为
 - **`@[webapp-testing]`**: 使用 Playwright 对本地 Web 应用进行交互测试和验证
@@ -201,6 +206,8 @@ ln -s ~/antigravity-skills/skills/* .agent/skills/
 - **[Agent-Skills-for-Context-Engineering](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering)**: 深入的上下文工程（Context Engineering）技能，涵盖压缩、优化与降级处理。
 - **[Obsidian Skills](https://github.com/kepano/obsidian-skills)**: 专业的 Obsidian 集成技能，包含 JSON Canvas 与增强型 Markdown 支持。
 - **[Remotion Skills](https://github.com/remotion-dev/skills)**: Remotion 官方提供的 AI Agent 技能，用于通过代码创建视频。
+- **[Vercel Agent Skills](https://github.com/vercel-labs/agent-skills)**: Vercel 提供的官方技能，涵盖 React 最佳实践、组合模式和 Web 设计指南。
+- **[Supabase Agent Skills](https://github.com/supabase/agent-skills)**: Supabase 提供的官方技能，专注于 Postgres 性能优化和最佳实践。
 
 ## 🛡️ 安全策略 (Security Policy)
 

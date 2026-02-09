@@ -90,5 +90,38 @@
                 "exclude": []
             }
         ]
+    },
+    {
+        "name": "vercel-labs/agent-skills",
+        "repo_url": "https://github.com/vercel-labs/agent-skills.git",
+        "branch": "main",
+        "copy_rules": [
+            {
+                "source": "skills",
+                "dest": "skills",
+                "exclude": [],
+                "include": [
+                    "react-best-practices",
+                    "web-design-guidelines",
+                    "react-native-skills",
+                    "composition-patterns"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "supabase/agent-skills",
+        "repo_url": "https://github.com/supabase/agent-skills.git",
+        "branch": "main",
+        "copy_rules": [
+            {
+                "source": "skills",
+                "dest": "skills",
+                "exclude": [],
+                "include": [
+                    "supabase-postgres-best-practices"
+                ]
+            }
+        ]
     }
 ]

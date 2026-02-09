@@ -36,6 +36,12 @@
     "description": "Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists' work to avoid copyright violations."
   },
   {
+    "id": "composition-patterns",
+    "path": "skills/composition-patterns",
+    "name": "composition-patterns",
+    "description": "React composition patterns that scale. Use when refactoring components with boolean prop proliferation, building flexible component libraries, or designing reusable APIs. Also includes React 19 API changes."
+  },
+  {
     "id": "context-compression",
     "path": "skills/context-compression",
     "name": "context-compression",
@@ -186,10 +192,28 @@
     "description": "This skill should be used when the user asks to \"start an LLM project\", \"design batch pipeline\", \"evaluate task-model fit\", \"structure agent project\", or mentions pipeline architecture, agent-assisted development, cost estimation, or choosing between LLM and traditional approaches."
   },
   {
+    "id": "react-best-practices",
+    "path": "skills/react-best-practices",
+    "name": "react-best-practices",
+    "description": "React and Next.js performance optimization guidelines from Vercel Engineering. Use when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patterns."
+  },
+  {
+    "id": "react-native-skills",
+    "path": "skills/react-native-skills",
+    "name": "react-native-skills",
+    "description": "React Native and Expo best practices for building performant mobile apps. Use when building React Native components, optimizing list performance, or implementing animations with Reanimated."
+  },
+  {
     "id": "receiving-code-review",
     "path": "skills/receiving-code-review",
     "name": "receiving-code-review",
     "description": "Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation"
+  },
+  {
+    "id": "remotion",
+    "path": "skills/remotion",
+    "name": "remotion",
+    "description": "Best practices for Remotion - Video creation in React. Use this skill whenever you are dealing with Remotion code to obtain the domain-specific knowledge."
   },
   {
     "id": "requesting-code-review",
@@ -214,6 +238,12 @@
     "path": "skills/subagent-driven-development",
     "name": "subagent-driven-development",
     "description": "Use when executing implementation plans with independent tasks in the current session"
+  },
+  {
+    "id": "supabase-postgres-best-practices",
+    "path": "skills/supabase-postgres-best-practices",
+    "name": "supabase-postgres-best-practices",
+    "description": "Postgres performance optimization and best practices from Supabase. Use this skill when writing, reviewing, or optimizing Postgres queries, schema designs, or database configurations."
   },
   {
     "id": "systematic-debugging",
@@ -268,6 +298,12 @@
     "path": "skills/web-artifacts-builder",
     "name": "web-artifacts-builder",
     "description": "Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state management, routing, or shadcn/ui components - not for simple single-file HTML/JSX artifacts."
+  },
+  {
+    "id": "web-design-guidelines",
+    "path": "skills/web-design-guidelines",
+    "name": "web-design-guidelines",
+    "description": "Review UI code for Web Interface Guidelines compliance. Use when asked to review UI, check accessibility, audit design, or check site against best practices."
   },
   {
     "id": "webapp-testing",

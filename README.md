@@ -114,7 +114,7 @@ Many skills in this project originate from excellent open-source communities. To
 
     > **Note**: The `ui-ux-pro-max` skill has a special directory structure and does not support automatic synchronization via script for now. Please use its official installation command `uipro init --ai antigravity` to install or update.
 
-## 🚀 Integrated Skills (Total: 50)
+## 🚀 Integrated Skills (Total: 55)
 
 ### 🎨 Creative & Design
 These skills focus on visual expression, UI/UX design, and artistic creation.
@@ -127,10 +127,15 @@ These skills focus on visual expression, UI/UX design, and artistic creation.
 - **`@[theme-factory]`**: Generate matching themes for documents, slides, HTML, etc.
 - **`@[brand-guidelines]`**: Apply Anthropic's official brand design specifications (colors, typography, etc.).
 - **`@[remotion]`**: Best practices for Remotion - Video creation in React.
+- **`@[web-design-guidelines]`**: Review UI code for Web Interface Guidelines compliance (accessibility, UX, design audit).
 - **`@[slack-gif-creator]`**: Create high-quality animated GIFs optimized specifically for Slack.
 
 ### 🛠️ Development & Engineering
 These skills cover the full lifecycle of coding, testing, debugging, and code review.
+- **`@[composition-patterns]`**: React composition patterns for building scalable, flexible component libraries.
+- **`@[react-best-practices]`**: Vercel's official React and Next.js performance optimization guidelines.
+- **`@[react-native-skills]`**: React Native and Expo best practices for performant mobile apps.
+- **`@[supabase-postgres-best-practices]`**: Postgres performance optimization and best practices from Supabase.
 - **`@[test-driven-development]`**: Test-Driven Development (TDD) - write tests before implementation code.
 - **`@[systematic-debugging]`**: Systematic debugging for resolving bugs, test failures, or abnormal behaviors.
 - **`@[webapp-testing]`**: Use Playwright for interactive testing and verification of local web applications.
@@ -199,6 +204,8 @@ This project integrates core ideas or skill implementations from the following e
 - **[Agent-Skills-for-Context-Engineering](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering)**: In-depth Context Engineering skills covering compression, optimization, and degradation handling.
 - **[Obsidian Skills](https://github.com/kepano/obsidian-skills)**: Professional Obsidian integration skills, including JSON Canvas and enhanced Markdown support.
 - **[Remotion Skills](https://github.com/remotion-dev/skills)**: Official Remotion skills for AI agents to create videos programmatically.
+- **[Vercel Agent Skills](https://github.com/vercel-labs/agent-skills)**: Official Vercel skills for React best practices, composition patterns, and web design guidelines.
+- **[Supabase Agent Skills](https://github.com/supabase/agent-skills)**: Official Supabase skills for Postgres performance optimization and best practices.
 
 ## 🛡️ Security Policy
 

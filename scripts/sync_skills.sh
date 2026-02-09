@@ -104,11 +104,12 @@ for ((i=0; i<count; i++)); do
         # Create destination directory
         mkdir -p "$dest_sub"
 
-        # Construct rsync exclude arguments
-        # Read excludes into an array from ACTIVE_CONFIG
+        # Read includes and excludes into arrays from ACTIVE_CONFIG
+        includes_json=$(jq -r ".[$i].copy_rules[$j].include[]?" "$ACTIVE_CONFIG")
         excludes_json=$(jq -r ".[$i].copy_rules[$j].exclude[]?" "$ACTIVE_CONFIG")
         rsync_opts="-a"
 
+        # Build exclude arguments
         exclude_args=()
         if [ -n "$excludes_json" ]; then
             while IFS= read -r exc; do
@@ -119,9 +120,32 @@ for ((i=0; i<count; i++)); do
         fi
 
         # Perform the copy
-        # If source is a directory, append / to copy contents
         if [ -d "$source_path" ]; then
-            rsync $rsync_opts "${exclude_args[@]}" "$source_path/" "$dest_sub/"
+            if [ -n "$includes_json" ]; then
+                # Explicit includes: Copy only specific items found in source_path
+                sources_to_copy=()
+                while IFS= read -r inc; do
+                   if [ -n "$inc" ]; then
+                        # Remove leading slash if present
+                        clean_inc=${inc#/}
+                        item_path="$source_path/$clean_inc"
+                        if [ -e "$item_path" ]; then
+                            sources_to_copy+=("$item_path")
+                        else
+                            echo "  ⚠️ Included item not found: $inc"
+                        fi
+                   fi
+                done <<< "$includes_json"
+
+                if [ ${#sources_to_copy[@]} -gt 0 ]; then
+                    rsync $rsync_opts "${exclude_args[@]}" "${sources_to_copy[@]}" "$dest_sub/"
+                else
+                    echo "  ⚠️ No valid items found to include for $name"
+                fi
+            else
+                # Default: Copy everything from source directory
+                rsync $rsync_opts "${exclude_args[@]}" "$source_path/" "$dest_sub/"
+            fi
         else
             # File copy
             cp "$source_path" "$dest_sub/"

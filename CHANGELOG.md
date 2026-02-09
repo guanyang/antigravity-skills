@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v2.3.0] - 2026-02-09
+### Added
+- **5 New Development Skills**:
+  - `composition-patterns`: Advanced React composition patterns for scalable component libraries.
+  - `react-best-practices`: Official Vercel guidelines for React and Next.js performance optimization.
+  - `react-native-skills`: Best practices for building performant React Native and Expo applications.
+  - `supabase-postgres-best-practices`: Comprehensive Postgres performance optimization guide from Supabase.
+  - `web-design-guidelines`: Auditing rules for web interface design, accessibility, and UX compliance.
+- **Script Enhancement**: Updated `scripts/sync_skills.sh` to support `include` directive in `skills_sources.json`, allowing precise file selection during synchronization.
+
+### Changed
+- **Skill Index**: Updated `skills_index.json` to include metadata for the 5 new skills and added missing entry for `remotion`.
+- **Documentation**: Updated `README.md` and `README.zh-CN.md` to list new skills (Total: 55) and added Vercel/Supabase to Credits & Sources.
+
 ## [v2.2.0] - 2026-02-02
 ### Added
 - **Sync Mechanism**: Introduced `skills_sources.json` configuration and `scripts/sync_skills.sh` script to keep skills synchronized with upstream open-source repositories.
