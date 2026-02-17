@@ -23,12 +23,13 @@ class VectorStore:
     
     def add(self, text: str, metadata: Dict[str, Any] = None) -> int:
         """Add document to store."""
+        metadata = metadata or {}
         embedding = self._embed(text)
         index = len(self.vectors)
-        
+
         self.vectors.append(embedding)
-        self.metadata.append(metadata or {})
-        
+        self.metadata.append(metadata)
+
         # Index by entity
         if "entity" in metadata:
             entity = metadata["entity"]
@@ -128,13 +129,27 @@ class VectorStore:
 
 class PropertyGraph:
     """Simple property graph storage."""
-    
+
     def __init__(self):
         self.nodes: Dict[str, Dict] = {}
         self.edges: Dict[str, Dict] = {}
+        self.entity_registry: Dict[str, str] = {}  # name -> node_id
         self.node_index: Dict[str, List[str]] = {}  # label -> node_ids
         self.edge_index: Dict[str, List[str]] = {}  # type -> edge_ids
-    
+
+    def get_or_create_node(self, name: str, label: str = "Entity",
+                           properties: Dict = None) -> str:
+        """Get existing node by name, or create a new one.
+        Uses entity_registry to maintain identity across interactions."""
+        if name in self.entity_registry:
+            node_id = self.entity_registry[name]
+            if properties:
+                self.nodes[node_id]["properties"].update(properties)
+            return node_id
+        node_id = self.create_node(label, {**(properties or {}), "name": name})
+        self.entity_registry[name] = node_id
+        return node_id
+
     def create_node(self, label: str, properties: Dict = None) -> str:
         """Create node with label and properties."""
         import time
@@ -323,8 +338,8 @@ class IntegratedMemorySystem:
         """Start a new memory session."""
         self.session_id = session_id
     
-    def store_fact(self, fact: str, entity: str, 
-                   timestamp: datetime = None, 
+    def store_fact(self, fact: str, entity: str,
+                   timestamp: datetime = None,
                    relationships: List[Dict] = None):
         """Store a fact with entity and relationships."""
         # Store in vector store
@@ -334,19 +349,18 @@ class IntegratedMemorySystem:
             "valid_from": (timestamp or datetime.now()).isoformat(),
             "session_id": self.session_id
         })
-        
-        # Create entity node if not exists
-        entity_node = self.graph.get_node(entity)
-        if not entity_node:
-            self.graph.create_node("Entity", {"id": entity, "name": entity})
-        
+
+        # Get or create entity node (uses registry for identity)
+        entity_node_id = self.graph.get_or_create_node(entity)
+
         # Create relationships
         if relationships:
             for rel in relationships:
+                target_node_id = self.graph.get_or_create_node(rel["target"])
                 self.graph.create_relationship(
-                    entity,
+                    entity_node_id,
                     rel["type"],
-                    rel["target"],
+                    target_node_id,
                     properties=rel.get("properties", {})
                 )
     
@@ -366,21 +380,25 @@ class IntegratedMemorySystem:
         for result in results:
             entity = result["metadata"].get("entity")
             if entity:
-                result["relationships"] = self.graph.get_relationships(entity)
+                node_id = self.graph.entity_registry.get(entity)
+                if node_id:
+                    result["relationships"] = self.graph.get_relationships(node_id)
         
         return results
     
     def retrieve_entity_context(self, entity: str) -> Dict:
         """Retrieve complete context for an entity."""
+        node_id = self.graph.entity_registry.get(entity)
+
         # Get entity node
-        entity_node = self.graph.get_node(entity)
-        
+        entity_node = self.graph.get_node(node_id) if node_id else None
+
         # Get relationships
-        relationships = self.graph.get_relationships(entity)
-        
+        relationships = self.graph.get_relationships(node_id) if node_id else []
+
         # Get vector memories
         memories = self.vector_store.search_by_entity(entity, limit=10)
-        
+
         return {
             "entity": entity_node,
             "relationships": relationships,

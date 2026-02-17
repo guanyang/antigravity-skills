@@ -11,6 +11,16 @@ import numpy as np
 from typing import List, Dict, Any
 import json
 
+
+def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
+    """Compute cosine similarity between two vectors."""
+    norm_a = np.linalg.norm(a)
+    norm_b = np.linalg.norm(b)
+    if norm_a == 0 or norm_b == 0:
+        return 0.0
+    return float(np.dot(a, b) / (norm_a * norm_b))
+
+
 class VectorStore:
     def __init__(self, dimension=768):
         self.dimension = dimension
@@ -58,9 +68,11 @@ class VectorStore:
         return results
     
     def _embed(self, text: str) -> np.ndarray:
-        """Generate embedding for text."""
-        # In production, use actual embedding model
-        return np.random.randn(self.dimension)
+        """Generate deterministic pseudo-embedding for demonstration.
+        In production, replace with actual embedding model."""
+        np.random.seed(hash(text) % (2**32))
+        vec = np.random.randn(self.dimension)
+        return vec / (np.linalg.norm(vec) + 1e-8)
     
     def _matches_filters(self, metadata: Dict, filters: Dict) -> bool:
         """Check if metadata matches filters."""
@@ -90,8 +102,9 @@ class MetadataVectorStore(VectorStore):
     
     def add(self, text: str, metadata: Dict[str, Any] = None):
         """Add with enhanced indexing."""
+        metadata = metadata or {}
         index = super().add(text, metadata)
-        
+
         # Index by entity
         if "entity" in metadata:
             entity = metadata["entity"]
@@ -145,11 +158,21 @@ class PropertyGraph:
     def __init__(self):
         self.nodes = {}  # id -> properties
         self.edges = []  # list of edge dicts
+        self.entity_registry = {}  # name -> node_id (maintains identity)
         self.indexes = {
             "node_label": {},  # label -> [node_ids]
             "edge_type": {}    # type -> [edge_ids]
         }
-    
+
+    def get_or_create_node(self, name: str, label: str, properties: Dict = None) -> str:
+        """Get existing node by name, or create a new one.
+        Uses entity_registry to ensure identity across interactions."""
+        if name in self.entity_registry:
+            return self.entity_registry[name]
+        node_id = self.create_node(label, {**(properties or {}), "name": name})
+        self.entity_registry[name] = node_id
+        return node_id
+
     def create_node(self, label: str, properties: Dict = None) -> str:
         """Create node with label and properties."""
         node_id = str(uuid.uuid4())
@@ -157,12 +180,12 @@ class PropertyGraph:
             "label": label,
             "properties": properties or {}
         }
-        
+
         # Index by label
         if label not in self.indexes["node_label"]:
             self.indexes["node_label"][label] = []
         self.indexes["node_label"][label].append(node_id)
-        
+
         return node_id
     
     def create_relationship(self, source_id: str, rel_type: str, 
@@ -446,13 +469,58 @@ class MemoryContextIntegrator:
         tokens = context.split()
         truncated = []
         count = 0
-        
+
         for token in tokens:
             if count + 1 > limit:
                 break
             truncated.append(token)
             count += 1
-        
+
         return " ".join(truncated)
+```
+
+## Framework Integration Examples
+
+### Mem0 Quick Start
+
+```python
+from mem0 import Memory
+
+# Initialize with default config (uses local storage)
+m = Memory()
+
+# Store memories with user scoping
+m.add("Prefers Python 3.12 with type hints", user_id="dev-alice")
+m.add("Working on microservices migration", user_id="dev-alice")
+
+# Search with natural language
+results = m.search("What language does the user prefer?", user_id="dev-alice")
+
+# Batch operations
+m.add([
+    "Sprint goal: complete auth service",
+    "Blocked on database schema review"
+], user_id="dev-alice")
+```
+
+### Graphiti (Zep's Open-Source Temporal KG Engine)
+
+```python
+from graphiti_core import Graphiti
+from graphiti_core.nodes import EpisodeType
+
+# Initialize with Neo4j backend
+graphiti = Graphiti("bolt://localhost:7687", "neo4j", "password")
+
+# Add episodes (conversations, events)
+await graphiti.add_episode(
+    name="user_conversation_42",
+    episode_body="Alice mentioned she moved to Berlin in January.",
+    source=EpisodeType.message,
+    source_description="Chat with Alice"
+)
+
+# Search combines semantic, keyword, and graph traversal
+results = await graphiti.search("Where does Alice live?")
 ```
 
