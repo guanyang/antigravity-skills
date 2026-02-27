@@ -2,12 +2,11 @@
 name: memory-systems
 description: >
   Guides implementation of agent memory systems, compares production frameworks
-  (Mem0, Zep/Graphiti, Letta, LangMem), and designs persistence architectures
+  (Mem0, Zep/Graphiti, Letta, LangMem, Cognee), and designs persistence architectures
   for cross-session knowledge retention. Use when the user asks to "implement
   agent memory", "persist state across sessions", "build knowledge graph for agents",
   "track entities over time", "add long-term memory", "choose a memory framework",
-  or mentions temporal knowledge graphs, vector stores, entity memory, or memory
-  benchmarks (LoCoMo, LongMemEval).
+  or mentions temporal knowledge graphs, vector stores, entity memory, adaptive memory, dynamic memory or memory benchmarks (LoCoMo, LongMemEval).
 ---
 
 # Memory System Design
@@ -18,11 +17,12 @@ Memory provides the persistence layer that allows agents to maintain continuity 
 
 Activate this skill when:
 - Building agents that must persist knowledge across sessions
-- Choosing between memory frameworks (Mem0, Zep/Graphiti, Letta, LangMem)
+- Choosing between memory frameworks (Mem0, Zep/Graphiti, Letta, LangMem, Cognee)
 - Needing to maintain entity consistency across conversations
 - Implementing reasoning over accumulated knowledge
 - Designing memory architectures that scale in production
 - Evaluating memory systems against benchmarks (LoCoMo, LongMemEval, DMR)
+- Building dynamic memory with automatic entity/relationship extraction and self-improving(Cognee)
 
 ## Core Concepts
 
@@ -37,23 +37,25 @@ Memory spans a spectrum from volatile context window to persistent storage. Key 
 | **Mem0** | Vector store + graph memory, pluggable backends | Multi-tenant systems, broad integrations | Less specialized for multi-agent |
 | **Zep/Graphiti** | Temporal knowledge graph, bi-temporal model | Enterprise requiring relationship modeling + temporal reasoning | Advanced features cloud-locked |
 | **Letta** | Self-editing memory with tiered storage (in-context/core/archival) | Full agent introspection, stateful services | Complexity for simple use cases |
+| **Cognee** | Multi-layer semantic graph via customizable ECL pipeline with customizable Tasks | Evolving agent memory that adapts and learns; multi-hop reasoning | Heavier ingest-time processing |
 | **LangMem** | Memory tools for LangGraph workflows | Teams already on LangGraph | Tightly coupled to LangGraph |
 | **File-system** | Plain files with naming conventions | Simple agents, prototyping | No semantic search, no relationships |
 
-Zep's Graphiti engine builds a three-tier knowledge graph (episode, semantic entity, community subgraphs) with a bi-temporal model tracking both when events occurred and when they were ingested. Mem0 offers the fastest path to production with managed infrastructure. Letta provides the deepest agent control through its Agent Development Environment.
+Zep's Graphiti engine builds a three-tier knowledge graph (episode, semantic entity, community subgraphs) with a bi-temporal model tracking both when events occurred and when they were ingested. Mem0 offers the fastest path to production with managed infrastructure. Letta provides the deepest agent control through its Agent Development Environment. Cognee produces multi-layer semantic graphs — it layers text chunks and entity types as nodes with detailed relationship edges, building interconnected knowledge engine. Every core piece (ingestion, entity extraction, post-processing, retrieval) is customizable.
 
 **Benchmark Performance Comparison**
 
-| System | DMR Accuracy | LoCoMo | Latency |
-|--------|-------------|--------|---------|
-| Zep (Temporal KG) | 94.8% | — | 2.58s |
-| Letta (filesystem) | — | 74.0% | — |
-| Mem0 | — | 68.5% | — |
-| MemGPT | 93.4% | — | Variable |
-| GraphRAG | ~75-85% | — | Variable |
-| Vector RAG baseline | ~60-70% | — | Fast |
+| System | DMR Accuracy | LoCoMo | HotPotQA (multi-hop) | Latency |
+|--------|-------------|--------|---------------------|---------|
+| Cognee | — | — | Highest on EM, F1, Correctness | Variable |
+| Zep (Temporal KG) | 94.8% | — | Mid-range across metrics | 2.58s |
+| Letta (filesystem) | — | 74.0% | — | — |
+| Mem0 | — | 68.5% | Lowest across metrics | — |
+| MemGPT | 93.4% | — | — | Variable |
+| GraphRAG | ~75-85% | — | — | Variable |
+| Vector RAG baseline | ~60-70% | — | — | Fast |
 
-Zep achieves up to 18.5% accuracy improvement on LongMemEval while reducing latency by 90%. Key insight: Letta's filesystem-based agents achieved 74% on LoCoMo using basic file operations, outperforming specialized memory tools — tool complexity matters less than reliable retrieval.
+Zep achieves up to 18.5% accuracy improvement on LongMemEval while reducing latency by 90%. Cognee outperformed Mem0, Graphiti, and LightRAG on HotPotQA multi-hop reasoning benchmarks across Exact Match, F1, and human-like correctness metrics. Letta's filesystem-based agents achieved 74% on LoCoMo using basic file operations, outperforming specialized memory tools — tool complexity matters less than reliable retrieval. No single benchmark is definitive; treat these as signals for specific retrieval dimensions rather than rankings.
 
 ### Memory Layers (Decision Points)
 
@@ -74,7 +76,7 @@ Zep achieves up to 18.5% accuracy improvement on LongMemEval while reducing late
 | **Temporal** (validity filter) | Facts change over time | Requires validity metadata |
 | **Hybrid** (semantic + keyword + graph) | Best overall accuracy | Most infrastructure |
 
-Zep's hybrid approach achieves 90% latency reduction (2.58s vs 28.9s) by retrieving only relevant subgraphs.
+Zep's hybrid approach achieves 90% latency reduction (2.58s vs 28.9s) by retrieving only relevant subgraphs. Cognee implements hybrid retrieval through its 14 search modes — each mode combines different strategies from its three-store architecture (graph, vector, relational), letting agents select the retrieval strategy that fits the query type rather than using a one-size-fits-all approach.
 
 ### Memory Consolidation
 
@@ -88,8 +90,8 @@ Consolidate periodically to prevent unbounded growth. **Invalidate but don't dis
 
 1. **Prototype**: File-system memory. Store facts as structured JSON with timestamps. Good enough to validate agent behavior.
 2. **Scale**: Move to Mem0 or vector store with metadata when you need semantic search and multi-tenant isolation.
-3. **Complex reasoning**: Add Zep/Graphiti when you need relationship traversal, temporal validity, or cross-session synthesis.
-4. **Full control**: Use Letta when you need agent self-management of memory with deep introspection.
+3. **Complex reasoning**: Add Zep/Graphiti when you need relationship traversal, temporal validity, or cross-session synthesis. Graphiti uses structured ties with generic relations, keeping graphs simple and easy to reason about; Cognee builds denser multi-layer semantic graphs with detailed relationship edges — choose based on whether you need temporal bi-modeling (Graphiti) or richer interconnected knowledge structures (Cognee).
+4. **Full control**: Use Letta or Cognee when you need agent self-management of memory with deep introspection.
 
 ### Integration with Context
 
@@ -141,6 +143,26 @@ results = graph.query_at_time(
 )
 ```
 
+**Example 3: Cognee Memory Ingestion and Search**
+```python
+import cognee
+from cognee.modules.search.types import SearchType
+
+# Ingest and build knowledge graph
+await cognee.add("./docs/")
+await cognee.add("any data")
+await cognee.cognify()
+
+# Enrich memory 
+await cognee.memify()
+
+# Agent retrieves relationship-aware context
+results = await cognee.search(
+    query_text="Any query for your memory",
+    query_type=SearchType.GRAPH_COMPLETION,
+)
+```
+
 ## Guidelines
 
 1. Start with file-system memory; add complexity only when retrieval quality demands it
@@ -162,8 +184,8 @@ This skill builds on context-fundamentals. It connects to:
 
 ## References
 
-Internal reference:
-- [Implementation Reference](./references/implementation.md) - Detailed implementation patterns
+Internal references:
+- [Implementation Reference](./references/implementation.md) - Detailed implementation patterns, production framework references (Mem0, Graphiti, Cognee)
 
 Related skills in this collection:
 - context-fundamentals - Context basics
@@ -172,15 +194,18 @@ Related skills in this collection:
 External resources:
 - Zep temporal knowledge graph paper (arXiv:2501.13956)
 - Mem0 production architecture paper (arXiv:2504.19413)
+- Cognee optimized knowledge graph + LLM reasoning paper	(arXiv:2505.24478)
 - LoCoMo benchmark (Snap Research)
 - MemBench evaluation framework (ACL 2025)
 - Graphiti open-source temporal KG engine (github.com/getzep/graphiti)
+- Cognee open-source knowledge graph memory (github.com/topoteretes/cognee)
+- [Cognee comparison: Form vs Function](https://www.cognee.ai/blog/deep-dives/competition-comparison-form-vs-function) — graph structure comparison and HotPotQA benchmarks across Mem0, Graphiti, LightRAG, Cognee
 
 ---
 
 ## Skill Metadata
 
 **Created**: 2025-12-20
-**Last Updated**: 2026-02-12
+**Last Updated**: 2026-02-26
 **Author**: Agent Skills for Context Engineering Contributors
-**Version**: 2.0.0
+**Version**: 3.0.0

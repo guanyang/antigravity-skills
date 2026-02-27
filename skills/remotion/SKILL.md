@@ -21,6 +21,10 @@ For some video operations, such as trimming videos or detecting silence, FFmpeg 
 
 When needing to visualize audio (spectrum bars, waveforms, bass-reactive effects), load the [./rules/audio-visualization.md](./rules/audio-visualization.md) file for more information.
 
+## Sound effects
+
+When needing to use sound effects, load the [./rules/sound-effects.md](./rules/sound-effects.md) file for more information.
+
 ## How to use
 
 Read individual rule files for detailed explanations and code examples:

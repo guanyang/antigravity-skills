@@ -524,3 +524,28 @@ await graphiti.add_episode(
 results = await graphiti.search("Where does Alice live?")
 ```
 
+### Cognee (Open-Source Knowledge Engine for AI Memory)
+
+```python
+import cognee
+from cognee.modules.search.types import SearchType
+
+# ECL pipeline: add → cognify → memify → search
+await cognee.add("./docs/")
+await cognee.add("any-data")
+await cognee.cognify()
+await cognee.memify()
+
+# Graph-aware retrieval (default: GRAPH_COMPLETION)
+results = await cognee.search(
+    query_text="any query to search in memory",
+    query_type=SearchType.GRAPH_COMPLETION,
+)
+
+# Raw chunks when agent reasons over text itself
+chunks = await cognee.search(
+    query_text="any query to search in memory",
+    query_type=SearchType.CHUNKS,
+)
+```
+
