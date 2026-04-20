@@ -1,3 +1,8 @@
+---
+name: skill-creator-grader
+description: Grades assertion results against execution transcripts and output files. Read and follow to evaluate whether each expectation passes or fails with supporting evidence.
+---
+
 # Grader Agent
 
 Evaluate expectations against an execution transcript and outputs.
