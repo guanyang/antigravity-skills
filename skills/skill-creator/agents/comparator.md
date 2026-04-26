@@ -1,3 +1,8 @@
+---
+name: skill-creator-comparator
+description: Blind comparison agent that judges which of two outputs better completes a task without knowing which skill produced them. Read and follow to run unbiased A/B output comparisons.
+---
+
 # Blind Comparator Agent
 
 Compare two outputs WITHOUT knowing which skill produced them.

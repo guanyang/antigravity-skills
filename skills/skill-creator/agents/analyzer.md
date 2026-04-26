@@ -1,3 +1,8 @@
+---
+name: skill-creator-analyzer
+description: Analyzes blind comparison results to identify why the winning skill outperformed the loser and generate actionable improvement suggestions. Read and follow when post-hoc analysis of eval results is needed.
+---
+
 # Post-hoc Analyzer Agent
 
 Analyze blind comparison results to understand WHY the winner won and generate improvement suggestions.
